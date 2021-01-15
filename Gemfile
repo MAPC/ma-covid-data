@@ -11,6 +11,7 @@ gem 'rails', '~> 6.1.1'
 gem 'sass-rails', '>= 6'
 gem 'webpacker', '~> 5.0'
 gem 'faraday'
+gem 'rubyXL'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
@@ -31,6 +32,9 @@ group :development do
   gem 'listen', '~> 3.3'
   gem 'rack-livereload'
   gem 'rack-mini-profiler', '~> 2.0'
+  gem 'rubocop'
+  gem 'rubocop-rails'
+  gem 'rubocop-rspec'
   gem 'rb-fsevent'
   gem 'spring'
   gem 'spring-commands-rspec'

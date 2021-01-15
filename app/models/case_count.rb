@@ -1,0 +1,2 @@
+class CaseCount < ApplicationRecord
+end
