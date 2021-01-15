@@ -25,26 +25,59 @@ namespace :import do
     
     city_town_worksheet.each_with_index do |row, index|
       next if index == 0
-      binding.irb
-      next if row[0].value == 'Unknown'
+      next if row[0].value == ('Unknown' || 'Unknown town')
       next if row[0].value == 'State'
-
-      CaseCount.create(
-        municipality: row[0].value,
-        county: row[1].value,
-        population: row[2].value,
-        total_case_counts: row[3].value,
-        two_week_case_counts: row[4].value,
-        average_daily_rate: row[5].value,
-        change_in_last_week: row[6].value,
-        total_tests: row[7].value,
-        total_tests_last_two_weeks: row[8].value,
-        total_positive_tests: row[9].value,
-        percent_positivity: row[10].value,
-        change_since_last_week: row[11].value,
-        testing_rate: row[12].value,
-        report: report_date.iso8601
-      )
+      
+      if report_date > Date.strptime('2021-01-01')
+        CaseCount.create(
+          municipality: row[0].value,
+          county: row[1].value,
+          population: row[2].value,
+          total_case_counts: row[3].value,
+          two_week_case_counts: get_two_week_case_counts(row[4]),
+          average_daily_rate: row[5].value,
+          change_in_last_week: row[6].value,
+          total_tests: row[7].value,
+          total_tests_last_two_weeks: row[8].value,
+          total_positive_tests: row[9].value,
+          percent_positivity: get_percent_positivity(row[10]),
+          change_since_last_week: row[11].value,
+          testing_rate: row[12].value,
+          report: report_date.iso8601
+        )
+      else
+        CaseCount.create(
+          municipality: row[0].value,
+          total_case_counts: row[1].value,
+          two_week_case_counts: get_two_week_case_counts(row[2]),
+          average_daily_rate: row[3].value,
+          change_in_last_week: row[4].value,
+          total_tests: row[5].value,
+          total_tests_last_two_weeks: row[6].value,
+          total_positive_tests: row[7].value,
+          percent_positivity: get_percent_positivity(row[8]),
+          change_since_last_week: row[9].value,
+          report: report_date.iso8601
+        )
+      end
     end
+  end
+end
+
+private
+
+def get_percent_positivity(cell)
+  if cell.value.class == Float || cell.value.class == Integer
+    cell.value
+  else
+    cell.value.match(/\d+\.?\d+?/)[0]
+  end
+end
+
+def get_two_week_case_counts(cell)
+  if cell.value.class == Integer
+    cell.value
+  else
+    cell.value.match(/\d+/)[0]
   end
 end
