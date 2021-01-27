@@ -29,3 +29,5 @@
 /config/master.key
 
 /public/cache/*
+
+node_modules

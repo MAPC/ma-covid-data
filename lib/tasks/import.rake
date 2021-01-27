@@ -10,24 +10,24 @@ namespace :import do
     report_date = Date.strptime(args[:date]) || Date.today
     File.open(Rails.root.join("tmp/weekly-public-health-report-raw-data-#{report_date.strftime('%B-%-d-%Y').downcase}.xlsx"), 'w:ASCII-8BIT') do |file|
       file.write(
-        Faraday.new do |faraday| 
+        Faraday.new do |faraday|
           faraday.use Faraday::Response::RaiseError
           faraday.adapter Faraday.default_adapter
         end.get("https://www.mass.gov/doc/weekly-public-health-report-raw-data-#{report_date.strftime('%B-%-d-%Y').downcase}/download")
            .body
       )
     end
-    
+
     workbook = RubyXL::Parser.parse(Rails.root.join("tmp/weekly-public-health-report-raw-data-#{report_date.strftime('%B-%-d-%Y').downcase}.xlsx"))
-    city_town_worksheet = workbook[3]
-    
+    city_town_worksheet = workbook['City_town'] || workbook['City_Town'] || workbook['Weekly City File']
+
     raise StandardError.new('Workbook format changed. Please inspect the workbook and update the rake task with the correct worksheet.') if city_town_worksheet[0][0].value != 'City/Town'
-    
+
     city_town_worksheet.each_with_index do |row, index|
       next if index == 0
       next if row[0].value == ('Unknown' || 'Unknown town')
       next if row[0].value == 'State'
-      
+
       if report_date > Date.strptime('2021-01-01')
         CaseCount.create(
           municipality: row[0].value,
@@ -69,6 +69,8 @@ private
 def get_percent_positivity(cell)
   if cell.value.class == Float || cell.value.class == Integer
     cell.value
+  elsif cell.value == '*'
+    return nil
   else
     cell.value.match(/\d+\.?\d+?/)[0]
   end
@@ -77,6 +79,8 @@ end
 def get_two_week_case_counts(cell)
   if cell.value.class == Integer
     cell.value
+  elsif cell.value == '*'
+    return nil
   else
     cell.value.match(/\d+/)[0]
   end
