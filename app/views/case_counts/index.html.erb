@@ -1,0 +1,9 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Case Counts</h1>
+
+<%= line_chart CaseCount.group_by_day(:report).count %>
+
+<br>
+
+<%= link_to 'New Case Count', new_case_count_path %>

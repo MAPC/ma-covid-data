@@ -9,3 +9,5 @@ import "channels"
 
 Rails.start()
 ActiveStorage.start()
+require("chartkick")
+require("chart.js")
