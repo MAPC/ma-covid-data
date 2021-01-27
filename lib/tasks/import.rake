@@ -28,7 +28,21 @@ namespace :import do
       next if row[0].value == ('Unknown' || 'Unknown town')
       next if row[0].value == 'State'
 
-      if report_date > Date.strptime('2021-01-01')
+      if report_date < Date.strptime('2021-01-01')
+        CaseCount.create(
+          municipality: row[0].value,
+          total_case_counts: row[1].value,
+          two_week_case_counts: get_two_week_case_counts(row[2]),
+          average_daily_rate: row[3].value,
+          change_in_last_week: row[4].value,
+          total_tests: row[5].value,
+          total_tests_last_two_weeks: row[6].value,
+          total_positive_tests: row[7].value,
+          percent_positivity: get_percent_positivity(row[8]),
+          change_since_last_week: row[9].value,
+          report: report_date.iso8601
+        )
+      elsif report_date < Date.strptime('2021-01-14')
         CaseCount.create(
           municipality: row[0].value,
           county: row[1].value,
