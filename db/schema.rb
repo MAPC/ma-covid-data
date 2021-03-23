@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_13_220026) do
+ActiveRecord::Schema.define(version: 2021_03_22_180501) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,6 +32,83 @@ ActiveRecord::Schema.define(version: 2021_01_13_220026) do
     t.date "report"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "ma_municipal_data_keys", force: :cascade do |t|
+    t.integer "muni_id"
+    t.string "municipal"
+    t.integer "mapc"
+    t.integer "mf164"
+    t.integer "county_id"
+    t.string "county"
+    t.integer "comm_type"
+    t.string "comm_name"
+    t.integer "subtype_id"
+    t.string "subtype"
+    t.integer "rpa_id"
+    t.string "rpa_name"
+    t.integer "mpo_id"
+    t.string "mpo_name"
+    t.integer "region_id"
+    t.string "region"
+    t.integer "subreg_id"
+    t.string "subregion"
+    t.integer "cousub_id"
+    t.string "cousub_name"
+  end
+
+  create_table "vaccinations_age_municipality", force: :cascade do |t|
+    t.string "county"
+    t.string "town"
+    t.string "age_group"
+    t.integer "population"
+    t.decimal "proportion_of_town_population"
+    t.integer "individuals_with_at_least_one_dose"
+    t.decimal "individuals_with_at_least_one_dose_per_capita"
+    t.decimal "proportion_of_town_individuals_with_at_least_one_dose"
+    t.integer "fully_vaccinated_individuals"
+    t.decimal "fully_vaccinated_individuals_per_capita"
+    t.decimal "proportion_of_town_fully_vaccinated_individuals"
+    t.integer "partially_vaccinated_individuals"
+    t.decimal "partially_vaccinated_individuals_per_capita"
+    t.decimal "proportion_of_town_partially_vaccinated_individuals"
+    t.date "report_date"
+  end
+
+  create_table "vaccinations_race_municipality", force: :cascade do |t|
+    t.string "county"
+    t.string "town"
+    t.string "race_ethnicity"
+    t.integer "population"
+    t.decimal "proportion_of_town_population"
+    t.integer "individuals_with_at_least_one_dose"
+    t.decimal "individuals_with_at_least_one_dose_per_capita"
+    t.decimal "proportion_of_town_individuals_with_at_least_one_dose"
+    t.integer "fully_vaccinated_individuals"
+    t.decimal "fully_vaccinated_individuals_per_capita"
+    t.decimal "proportion_of_town_fully_vaccinated_individuals"
+    t.integer "partially_vaccinated_individuals"
+    t.decimal "partially_vaccinated_individuals_per_capita"
+    t.decimal "proportion_of_town_partially_vaccinated_individuals"
+    t.date "report_date"
+  end
+
+  create_table "vaccinations_sex_municipality", force: :cascade do |t|
+    t.string "county"
+    t.string "town"
+    t.string "sex"
+    t.integer "population"
+    t.decimal "proportion_of_town_population"
+    t.integer "individuals_with_at_least_one_dose"
+    t.decimal "individuals_with_at_least_one_dose_per_capita"
+    t.decimal "proportion_of_town_individuals_with_at_least_one_dose"
+    t.integer "fully_vaccinated_individuals"
+    t.decimal "fully_vaccinated_individuals_per_capita"
+    t.decimal "proportion_of_town_fully_vaccinated_individuals"
+    t.integer "partially_vaccinated_individuals"
+    t.decimal "partially_vaccinated_individuals_per_capita"
+    t.decimal "proportion_of_town_partially_vaccinated_individuals"
+    t.date "report_date"
   end
 
 end
