@@ -81,6 +81,13 @@ namespace :import do
   desc "Import weekly vaccination from the Commonwealth of Massachusetts"
   task :weekly_vaccination_data, [:date] => :environment do |task, args|
     report_date = Date.strptime(args[:date]) || Date.today
+
+    if report_date > Date.parse('2021-03-18')
+      WORKBOOK_NAMES = ['Age - municipality', 'Race and ethnicity - muni.', 'Sex - municipality']
+    else
+      WORKBOOK_NAMES = ['Age - municipality', 'Race and ethnicity - municipali', 'Sex - municipality']
+    end
+    
     File.open(Rails.root.join("tmp/weekly-covid-19-municipality-vaccination-report-#{report_date.strftime('%B-%-d-%Y').downcase}.xlsx"), 'w:ASCII-8BIT') do |file|
       file.write(
         Faraday.new do |faraday|
@@ -93,7 +100,7 @@ namespace :import do
     
     workbook = RubyXL::Parser.parse(Rails.root.join("tmp/weekly-covid-19-municipality-vaccination-report-#{report_date.strftime('%B-%-d-%Y').downcase}.xlsx"))
   
-    workbook['Age - municipality'].each_with_index do |row, index|
+    workbook[WORKBOOK_NAMES[0]].each_with_index do |row, index|
       next if [0,1].include?(index)
       AgeMunicipality.create(
         county: row[0].value,
@@ -114,7 +121,7 @@ namespace :import do
       )
     end
   
-    workbook['Race and ethnicity - municipali'].each_with_index do |row, index|
+    workbook[WORKBOOK_NAMES[1]].each_with_index do |row, index|
       next if [0,1].include?(index)
       RaceMunicipality.create(
         county: row[0].value,
@@ -135,7 +142,7 @@ namespace :import do
       )
     end
     
-    workbook['Sex - municipality'].each_with_index do |row, index|
+    workbook[WORKBOOK_NAMES[2]].each_with_index do |row, index|
       next if [0,1].include?(index)
       SexMunicipality.create(
         county: row[0].value,
