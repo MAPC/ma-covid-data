@@ -1,24 +1,8 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## CRON Jobs
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+```
+7 20 * * 4  cd /var/www/ma-covid-data/current && RAILS_ENV=production /home/ma-covid-data/.rvm/gems/ruby-2.7.2/bin/bundle exec rake import:weekly_covid_data[$(date +"\%Y-\%m-\%d")] 2>&1 | /usr/bin/logger -t ma_covid_data
+12 20 * * 4 cd /var/www/ma-covid-data/current && RAILS_ENV=production /home/ma-covid-data/.rvm/gems/ruby-2.7.2/bin/bundle exec rake import:weekly_vaccination_data[$(date +"\%Y-\%m-\%d")] 2>&1 | /usr/bin/logger -t ma_covid_data
+```
