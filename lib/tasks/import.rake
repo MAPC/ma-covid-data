@@ -9,17 +9,17 @@ namespace :import do
   desc "Import weekly covid data from the Commonwealth of Massachusetts"
   task :weekly_covid_data, [:date] => :environment do |task, args|
     report_date = Date.strptime(args[:date]) || Date.today
-    File.open(Rails.root.join("tmp/weekly-public-health-report-raw-data-#{report_date.strftime('%B-%-d-%Y').downcase}.xlsx"), 'w:ASCII-8BIT') do |file|
+    File.open(Rails.root.join("tmp/weekly-covid-19-public-health-report-raw-data-#{report_date.strftime('%B-%-d-%Y').downcase}.xlsx"), 'w:ASCII-8BIT') do |file|
       file.write(
         Faraday.new do |faraday|
           faraday.use Faraday::Response::RaiseError
           faraday.adapter Faraday.default_adapter
-        end.get("https://www.mass.gov/doc/weekly-public-health-report-raw-data-#{report_date.strftime('%B-%-d-%Y').downcase}/download")
+        end.get("https://www.mass.gov/doc/weekly-covid-19-public-health-report-raw-data-#{report_date.strftime('%B-%-d-%Y').downcase}/download")
            .body
       )
     end
 
-    workbook = RubyXL::Parser.parse(Rails.root.join("tmp/weekly-public-health-report-raw-data-#{report_date.strftime('%B-%-d-%Y').downcase}.xlsx"))
+    workbook = RubyXL::Parser.parse(Rails.root.join("tmp/weekly-covid-19-public-health-report-raw-data-#{report_date.strftime('%B-%-d-%Y').downcase}.xlsx"))
     city_town_worksheet = workbook['City_town'] || workbook['City_Town'] || workbook['Weekly City File']
 
     raise StandardError.new('Workbook format changed. Please inspect the workbook and update the rake task with the correct worksheet.') if city_town_worksheet[0][0].value != 'City/Town'
