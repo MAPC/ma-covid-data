@@ -32,7 +32,7 @@ server "live.mapc.org", user: "ma-covid-data", roles: %w{app db web}
 # Feel free to add new variables to customise your setup.
 set :passenger_restart_command, 'passenger-config restart-app'
 set :rvm_custom_path, '/usr/share/rvm'
-set :rvm_ruby_version, '2.7.2'
+set :rvm_ruby_version, '2.7.3'
 
 
 
